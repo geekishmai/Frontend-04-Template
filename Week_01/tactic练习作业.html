@@ -1,0 +1,107 @@
+<style>
+    .cell {
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        background-color: aquamarine;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        border: 2px solid #ffffff;
+        font-size: 50px;
+    }
+</style>
+
+<html>
+    <div id="board"></div>
+</html>
+
+<script>
+    let pattern = [
+        [1,0,0],
+        [0,2,0],
+        [0,0,0]
+    ];
+    let color = 1;
+    function show() {
+        let board = document.getElementById("board");
+        board.innerHTML = "";
+        for(let i = 0;i < 3;i++) {
+            for(let j = 0;j < 3;j++) {
+                let cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.innerText = pattern[i][j] === 2 ? "❌": pattern[i][j] === 1 ? "✅" : "";
+                cell.addEventListener("click",()=> move(i,j))
+                board.appendChild(cell);  
+            }
+            board.appendChild(document.createElement("br"));
+        }
+    }
+
+    function move(i,j) {
+        if(pattern[i][j] === 1 || pattern[i][j] === 2) return;  // fix：可能被覆盖问题
+        pattern[i][j] = color;
+        if(check(pattern,color)) {
+            console.log(color === 1 ? "游戏结束,勾勾赢":"游戏结束，叉叉赢")
+        };
+        color = 3 - color;
+        console.log(color)
+        show();
+    }
+
+    function check(pattern,color) {
+        let win = true;
+        for(let i = 0;i < 3;i++) {
+            win = true;
+            for(let j = 0;j < 3;j++) {
+                if(pattern[i][j] !== color) {
+                    win = false;
+                }
+            }
+            if(win) {
+                return true;
+            }
+        }
+
+        for(let i = 0;i < 3;i++) {
+            win = true;
+            for(let j = 0;j < 3;j++) {
+                if(pattern[j][i] !== color) {
+                    win = false;
+                }
+            }
+            if(win) {
+                return true;
+            }
+        }
+
+        {
+            win = true;
+            for(let j = 0;j < 3;j++) {
+                if(pattern[j][2-j] !== color) {
+                    win = false;
+                }
+            }
+            if(win) {
+                return true;
+            }
+        }
+
+        {
+            win = true;
+            for(let j = 0;j < 3;j++) {
+                if(pattern[j][j] !== color) {
+                    win = false;
+                }
+            }
+            if(win) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    show();
+</script>
+
+
